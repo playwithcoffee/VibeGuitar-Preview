@@ -2,9 +2,28 @@
   "version": 1,
   "files": {
     ".nojekyll": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-    "app.js": "409bbbf6e79579a4f0fc63714c266f1e445bb2d9e06548fe4e426e75171f8a1b",
-    "health.json": "037bf760c47f487fe69e2375bd0763a310e2f6a5100ec0a18a5af97b032f058d",
-    "index.html": "6e527af7ba0e43a9d122e9c7743040a5192f347ab8a421a009e4adf7d5251c99",
-    "styles.css": "921c3dc7a5886cac818804c111a7211e28b59214b84a0ff82c5a50dff17baddd"
+    "app.js": "d5bfca8b60122956df099de3c34e4be96d56f6022953856ac522ed49d4eef936",
+    "app/controller.js": "7e266e2abbb68947be2cf4bf37e8d307eab89e8968f24cb4d859850aecee4e5f",
+    "app/diagram-plan.js": "d10fbc57cf2a52776a561d21af6a075b3ee5535d138ebd03fc80710edb51affa",
+    "app/runtime-catalogue.js": "6c9d8dc135f5a007f5ba6db66f151d31deec9039cbd5a1a9232ee04c04589561",
+    "core/guitar.js": "d9f4384d7293712daa6d0af7f255f1e7b6d2144a9bc9932d04c129a51a1ccb2d",
+    "core/music.js": "e41404209316c76b30d01e8af9c0244b97ac1cd62883c7ed50b380f1930fa3c6",
+    "core/progression.js": "292a7288ff2cd4c22cc61dcc8a4bd27fa274debb67b8cf44c3a044dd458aff12",
+    "health.json": "e9f6977ada6aca1df3c33594eb301bc7eca0a8efed22a3d120eec82c097ed310",
+    "icons/vibeguitar-192.png": "78a5ecb709af965c7b86a56995533c64a9cf7e435883b7f36f7163963208b7c4",
+    "icons/vibeguitar-512.png": "c515e1ad7f0c4de5fe02c1c6986b500a1f29d35745fb4475b9b52524e3782850",
+    "index.html": "774c1e01447c84e266f7603555d5f0716fbaaf177dfb5a40b561ec6bba370af4",
+    "manifest.webmanifest": "a5111e732226ea745a5b774a1507ad64f5828e243aea1c1e311f052a4b32d669",
+    "offline/offline-status.js": "817b2bf4d28bc13c9670569b247e01446d2b28fe69c3f2780b323486f1d89036",
+    "offline/release-info.js": "4db153ee6c0d6142c8cbae6b4edc8a2a6985568845d7955df1dd651ac25e71a9",
+    "offline/update-candidate.js": "909be491147437530960e38bb05ab1a62da1acb3ad28356e97670a63dfe63845",
+    "offline/update-handoff.js": "4fd95fed81a685b6e8d659e162b13c6accff66f2a69e9415f72b559e03968bd3",
+    "session/live-session.js": "dc71be8532ff4dbe0a97950c8b0ea872a1bccfa376a645b22e5b9ff032151a85",
+    "session/production-contract.js": "827ef1830afb08e3a5ab29be534b8c575abcb78874344435ada98f295b521a4b",
+    "session/production-restore.js": "f915fc387d198a200e8130389421ea315086018f9f5a21f5203806df0b9653cd",
+    "session/production-storage.js": "df3243cc308a53bb0764d5d8d88ae4915ceaede37f1c23c0fe5a7a52bc64c36c",
+    "styles.css": "442feda826177041948f92f7563a811cc60787163b468d45e68844d57bfd5d3d",
+    "sw.js": "80c39cc630ab1320690c247145d4093b6bdeb30fad726736016390043be03d6d",
+    "third-party/chords-db-LICENSE.txt": "ca1f5a79ed75347924bba07c979bc7a6d0f7438e82d655f7e8dcdfa32939a3d9"
   }
 }
