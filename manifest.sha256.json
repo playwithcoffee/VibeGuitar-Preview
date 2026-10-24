@@ -15,7 +15,7 @@
     "index.html": "774c1e01447c84e266f7603555d5f0716fbaaf177dfb5a40b561ec6bba370af4",
     "manifest.webmanifest": "a5111e732226ea745a5b774a1507ad64f5828e243aea1c1e311f052a4b32d669",
     "offline/offline-status.js": "817b2bf4d28bc13c9670569b247e01446d2b28fe69c3f2780b323486f1d89036",
-    "offline/release-info.js": "4db153ee6c0d6142c8cbae6b4edc8a2a6985568845d7955df1dd651ac25e71a9",
+    "offline/release-info.js": "6c5b5b3c1e6ca1f7039153d555762733e6e1c5fcf95df5bfdce92b4498a1e780",
     "offline/update-candidate.js": "909be491147437530960e38bb05ab1a62da1acb3ad28356e97670a63dfe63845",
     "offline/update-handoff.js": "4fd95fed81a685b6e8d659e162b13c6accff66f2a69e9415f72b559e03968bd3",
     "session/live-session.js": "dc71be8532ff4dbe0a97950c8b0ea872a1bccfa376a645b22e5b9ff032151a85",
@@ -23,7 +23,7 @@
     "session/production-restore.js": "f915fc387d198a200e8130389421ea315086018f9f5a21f5203806df0b9653cd",
     "session/production-storage.js": "df3243cc308a53bb0764d5d8d88ae4915ceaede37f1c23c0fe5a7a52bc64c36c",
     "styles.css": "442feda826177041948f92f7563a811cc60787163b468d45e68844d57bfd5d3d",
-    "sw.js": "80c39cc630ab1320690c247145d4093b6bdeb30fad726736016390043be03d6d",
+    "sw.js": "b0e9723784c3b53ce1cf611a1ae3a7071009acd5cebf735ca978b8382b276ce8",
     "third-party/chords-db-LICENSE.txt": "ca1f5a79ed75347924bba07c979bc7a6d0f7438e82d655f7e8dcdfa32939a3d9"
   }
 }
