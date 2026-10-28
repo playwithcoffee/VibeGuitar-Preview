@@ -34,3 +34,18 @@
   .grid-scroll{overflow-x:auto;overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch;padding-bottom:10px;scrollbar-width:thin;scrollbar-color:var(--vg-border) transparent}
   .random-grid{min-width:660px}
 }
+
+/* R5: prevent transient card-label/fretboard text selection during touch activation.
+   Editable controls must retain caret movement, drag selection, copy and paste.
+   This deliberately does not suppress keyboard focus or semantic note activation. */
+.shell, .shell *, .dialog-backdrop, .dialog-backdrop * {
+  -webkit-user-select: none;
+  user-select: none;
+}
+.shell :is(input, textarea, [contenteditable="true"], [contenteditable="plaintext-only"]),
+.dialog-backdrop :is(input, textarea, [contenteditable="true"], [contenteditable="plaintext-only"]),
+.shell [contenteditable="true"] *, .shell [contenteditable="plaintext-only"] *,
+.dialog-backdrop [contenteditable="true"] *, .dialog-backdrop [contenteditable="plaintext-only"] * {
+  -webkit-user-select: text;
+  user-select: text;
+}
