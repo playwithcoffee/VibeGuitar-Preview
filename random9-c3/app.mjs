@@ -17,6 +17,17 @@ const readableRoot=root=>({Csharp:'C#',Fsharp:'F#'})[root]||root;
 function chordName(c){const suffix=c.sourceSuffix;return readableRoot(c.sourceRoot)+(suffix==='major'?'':suffix==='minor'?'m':suffix);}
 const setStatus=(message,error=false)=>{const target=$('status');target.textContent=message;target.dataset.error=String(error);};
 let loaded=null,loading=null,activeRender=null,focusReturn=null,numberOfEvents=0,currentGrid=null;
+// One same-document history entry per open inspector makes Android Back dismiss
+// the overlay without consuming the page's earlier navigation entry. This is
+// deliberately scoped to this isolated explorer (no router or persistence).
+const INSPECTOR_STATE_KEY='__vgRandom9InspectorV1';
+const inspectorSession=Array.from(crypto.getRandomValues(new Uint32Array(2)), x=>x.toString(16)).join('-');
+let closingFromHistory=false;
+const ownInspectorState=state=>{
+  const marker=state && typeof state==='object' && !Array.isArray(state) && state[INSPECTOR_STATE_KEY];
+  return marker && marker.session===inspectorSession ? marker : null;
+};
+
 async function checkedFile(path){
   const expected=PINS[path];if(!SHA_RE.test(expected))throw Error('C2_UNPINNED_ASSET:'+path);
   const response=await fetch(path,{cache:'no-store'});
@@ -51,20 +62,64 @@ function eventTrace(evt){
   $('event').textContent=JSON.stringify({eventNumber:++numberOfEvents,...evt},null,2);
   if(activeRender && evt.kind==='mark.activate')activeRender.update({selectedMarkIds:[evt.targetId]});
 }
-function closeInspector(){
+function dismissInspectorView(){
+  if($('inspector').hidden)return;
   $('inspector').hidden=true;document.body.classList.remove('inspect-open');
   $('inspectBoard').replaceChildren();activeRender=null;
   if(focusReturn?.isConnected)focusReturn.focus();focusReturn=null;
 }
-function openInspector(card,button,renderer){
+function closeInspector(){
+  if($('inspector').hidden || closingFromHistory)return;
+  // Only navigate back when *our* pushed modal entry is current. Never
+  // consume the visitor's previous page when no modal entry belongs to us.
+  if(ownInspectorState(history.state)){
+    closingFromHistory=true;
+    history.back();
+  }else dismissInspectorView();
+}
+function openInspector(card,button,renderer,{fromHistory=false}={}){
+  if(closingFromHistory)return;
+  // Build the inspector before mutating history, so render failure cannot
+  // leave an invisible/phantom modal entry behind.
+  const render=renderer.renderFretSurface(card.spec,{},eventTrace);
+  if(!fromHistory){
+    const previous=history.state;
+    const state=previous && typeof previous==='object' && !Array.isArray(previous)
+      ? {...previous} : {};
+    state[INSPECTOR_STATE_KEY]={session:inspectorSession,seed:currentGrid?.seed,sourceId:card.sourceId};
+    history.pushState(state,'',location.href);
+  }
   focusReturn=button;
   $('inspectTitle').textContent=chordName(card);
   $('inspectDescription').textContent='Explore the exact source markings. Touch or focus a note to inspect its semantic event.';
   $('inspectIdentity').textContent=`${card.sourceId} · Base fret ${card.sourceBaseFret} · ${card.sourceMidi.length} sounding notes · No synthesized technique`;
-  activeRender=renderer.renderFretSurface(card.spec,{},eventTrace);
+  activeRender=render;
   $('inspectBoard').replaceChildren(activeRender.element);
   $('inspector').hidden=false;document.body.classList.add('inspect-open');$('close').focus();
 }
+window.addEventListener('popstate',event=>{
+  closingFromHistory=false;
+  const marker=ownInspectorState(event.state);
+  if(!marker){dismissInspectorView();return;}
+  // A Forward traversal can reopen the same card only if the still-live grid
+  // has exactly the source and seed identity from that history entry.
+  const index=currentGrid?.seed===marker.seed
+    ? currentGrid.cards.findIndex(card=>card.sourceId===marker.sourceId) : -1;
+  const tile=index>=0 ? $('grid').children[index] : null;
+  if(index>=0 && tile?.classList.contains('random-card') && loaded){
+    if(!$('inspector').hidden)dismissInspectorView();
+    openInspector(currentGrid.cards[index],tile,loaded.renderer,{fromHistory:true});
+  }else{
+    // No stale card is ever reconstructed against an unrelated shuffled grid.
+    // Strip only our own marker; other browser state remains unmodified.
+    const state=history.state;
+    if(state && typeof state==='object' && !Array.isArray(state)){
+      const clean={...state};delete clean[INSPECTOR_STATE_KEY];
+      history.replaceState(clean,'',location.href);
+    }
+    dismissInspectorView();
+  }
+});
 function createTile(card,index,renderer){
   const tile=el('button','random-card');tile.type='button';tile.setAttribute('aria-label',`Inspect ${chordName(card)}, ${card.sourceId}`);
   const top=el('span','random-card-top'),name=el('span','tile-title',chordName(card)),num=el('span','tile-num',String(index+1).padStart(2,'0')+'/09');
