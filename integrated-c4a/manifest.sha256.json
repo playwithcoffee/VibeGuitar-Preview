@@ -1,0 +1,32 @@
+{
+  "version": 1,
+  "files": {
+    ".nojekyll": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "app.js": "3171c27e8cca60d1fc36ccdf884eeaf9ee20921f5f6ac487ed176acded749bd7",
+    "app/controller.js": "f71165534dad3ef5990329aaaf5ec2c778fccc68a9ac35235a138513af5753ca",
+    "app/diagram-plan.js": "f118badf3dc9e8fc5dbff88f8ceccb34884a1a4dd57c4edbf7b25e48ab17ff21",
+    "app/runtime-catalogue.js": "6c9d8dc135f5a007f5ba6db66f151d31deec9039cbd5a1a9232ee04c04589561",
+    "core/guitar.js": "d9f4384d7293712daa6d0af7f255f1e7b6d2144a9bc9932d04c129a51a1ccb2d",
+    "core/music.js": "e41404209316c76b30d01e8af9c0244b97ac1cd62883c7ed50b380f1930fa3c6",
+    "core/progression.js": "292a7288ff2cd4c22cc61dcc8a4bd27fa274debb67b8cf44c3a044dd458aff12",
+    "fretcard/core.js": "2b3d3a0be682aa25100c10ebed21e380996512ccfcdda569b1edf1037282fefc",
+    "fretcard/dom-render.js": "be9124df634c5db9a76a5ec16f575d2f94473fa87d1440aab7d32d44801d1a35",
+    "fretcard/shape-adapter.js": "2ea0bf1b8023786f6a2d2a3407f34cff202278c1ef4a0b9cb4de50fc6928c58d",
+    "health.json": "e9f6977ada6aca1df3c33594eb301bc7eca0a8efed22a3d120eec82c097ed310",
+    "icons/vibeguitar-192.png": "78a5ecb709af965c7b86a56995533c64a9cf7e435883b7f36f7163963208b7c4",
+    "icons/vibeguitar-512.png": "c515e1ad7f0c4de5fe02c1c6986b500a1f29d35745fb4475b9b52524e3782850",
+    "index.html": "774c1e01447c84e266f7603555d5f0716fbaaf177dfb5a40b561ec6bba370af4",
+    "manifest.webmanifest": "b16b22bb3ea6735566ba4f808dc67a666ede1b2c45a21b13ab047a51cea98fd6",
+    "offline/offline-status.js": "ae34ed78fda914f36b0bda3ef8151eea62f12bf2b404062aec9da03e8566a342",
+    "offline/release-info.js": "cd21bd214a35f3898d2a0e050509d16b0cb227c63a325e54783f902783176550",
+    "offline/update-candidate.js": "963cbe2a693a2592d21410f4b5c24b871cd8c98e8c5b37ea17496d8e116b0747",
+    "offline/update-handoff.js": "0444265e123555d2fa9b2453b99f3c33d039084cda6acfcf70969cd54cedac71",
+    "session/live-session.js": "928ef04133abac2d248ec041ddb47a2212473f80166b9521e175c56976a59901",
+    "session/production-contract.js": "5b03320ad8b3d017169839e9eb60d087ca1d9d4f23e56de51ed34dedd11b7579",
+    "session/production-restore.js": "3c907af8438e9d1cdd09d71767856cd233d110c82529cc60b1da9ae5e5328f1c",
+    "session/production-storage.js": "7803c2b00aa770f83e9e696c2c6b84c080a98f26748103eabcc626d3c8475eba",
+    "styles.css": "2239b0dcc313cb69297418abe01164f48c01385274b2fb3bf0a1d2f7d48c857f",
+    "sw.js": "7c422fb4f903be61adcc3f3ef3b9a47d81f124b9d4f97d0eeeb5107f9eb68520",
+    "third-party/chords-db-LICENSE.txt": "ca1f5a79ed75347924bba07c979bc7a6d0f7438e82d655f7e8dcdfa32939a3d9"
+  }
+}
