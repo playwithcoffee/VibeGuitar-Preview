@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en" data-theme="warm">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#F4F2ED">
+  <meta name="description" content="VibeGuitar internal digital chord preview; 16 source-checked positions, physical technique unverified.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%2324533F'/%3E%3Ctext x='50' y='70' text-anchor='middle' font-size='63' fill='white'%3E%E2%99%AA%3C/text%3E%3C/svg%3E">
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="apple-touch-icon" href="./icons/vibeguitar-192.png">
+  <link rel="stylesheet" href="./styles.css">
+  <script type="module" src="./app.js"></script>
+  <title>VibeGuitar • Development Preview</title>
+</head>
+<body>
+<div class="shell">
+  <header class="topbar">
+    <div class="brand"><div class="brand-logo" aria-hidden="true">♪</div><div><strong>VibeGuitar</strong><small>Chord workspace</small></div></div>
+    <div class="header-actions"><span class="edition">DEVELOPMENT PREVIEW</span><label for="theme-select" class="theme-label">Theme</label><select id="theme-select" name="theme" aria-label="Theme"><option value="warm">Warm Studio</option><option value="dark">Studio Dark</option><option value="clean">Clean Utility</option></select></div>
+  </header>
+  <main>
+    <section class="composer panel" aria-labelledby="compose-title">
+      <div class="panel-heading"><h1 id="compose-title">Your progression</h1><span class="tiny">Standard tuning · 6 strings</span></div>
+      <form id="progression-form" novalidate>
+        <label for="progression-input" class="field-label">Chord progression</label>
+        <textarea id="progression-input" name="progression" rows="1" spellcheck="false" autocomplete="off" aria-describedby="progression-help form-feedback" aria-invalid="false">C, G, Am, F</textarea>
+        <div class="input-foot"><p id="progression-help" class="input-hint">Digital positions: C, D, E, F, G, A, Am, Dm, Em, A7, D7, G7. Slash chords such as C/E may be unavailable.</p><button type="submit" class="primary">Show chords</button></div>
+      </form>
+      <div class="session-line" aria-label="Session persistence">
+        <p id="session-status" data-phase="unstarted" aria-live="polite" role="status"></p>
+        <button type="button" id="session-retry" class="secondary session-action" hidden>Retry saving</button>
+        <button type="button" id="session-replace" class="secondary session-action" hidden>Replace saved session…</button>
+      </div>
+      <p id="offline-status" class="offline-status" data-phase="unknown" aria-live="polite" role="status">Offline files not verified yet.</p>
+      <p id="update-status" class="update-status" data-phase="hidden" aria-live="polite" role="status" hidden></p>
+      <p id="draft-status" class="draft-status" aria-live="polite"></p>
+      <div id="form-feedback" class="feedback" aria-live="polite" role="status"></div>
+    </section>
+    <section class="shapes" aria-labelledby="shapes-title"><div class="section-head"><h2 id="shapes-title">Chord shapes</h2><div class="card-view-control"><label for="card-view-select">Display</label><select id="card-view-select" aria-label="Default chord card display"><option value="finger">Fingers</option><option value="note">Notes + degrees</option></select><p class="count-label" id="progression-count"></p></div></div><div id="chord-cards" class="cards"></div></section>
+    <aside class="preview-warning" aria-label="Development preview limitations"><span aria-hidden="true">ⓘ</span><p>Digitally/source checked only · Physical playability unverified · Browser saving with protected recovery · Offline readiness shown separately · Android not verified</p></aside>
+  </main>
+  <footer>VibeGuitar · Local-only digital preview · <a href="./third-party/chords-db-LICENSE.txt">Chord data MIT licence</a></footer>
+</div>
+<dialog id="shape-dialog" aria-labelledby="dialog-title" aria-describedby="dialog-help">
+  <div class="dialog-shell"><div class="dialog-head"><h2 id="dialog-title">Choose a position</h2><button id="dialog-close" type="button" class="icon-close" aria-label="Cancel and close inspector">×</button></div>
+    <p id="dialog-help" class="dialog-help">Tap a fretboard note for details. Browse positions here; only Apply accepts a change.</p>
+    <div class="dialog-layout"><div id="dialog-preview" class="dialog-preview"></div><div><p class="field-label">Available digital positions</p><div id="dialog-options" class="option-list"></div></div></div>
+    <div class="dialog-actions"><button id="dialog-cancel" type="button" class="secondary">Cancel</button><button id="dialog-apply" type="button" class="primary">Apply to this chord</button></div>
+  </div>
+</dialog>
+</body>
+</html>
