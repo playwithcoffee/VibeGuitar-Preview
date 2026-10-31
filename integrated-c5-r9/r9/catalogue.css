@@ -76,3 +76,11 @@ input, textarea,
   -moz-user-select:none !important;
   user-select:none !important;
 }
+
+/* Inspector is the only scrollable region while its native modal is open.
+ * The corresponding JavaScript locks the background body at its scroll offset. */
+#inspector[open] {
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-y;
+}
