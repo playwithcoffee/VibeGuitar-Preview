@@ -48,6 +48,12 @@ async function init(){try{if(!globalThis.crypto?.subtle)throw Error('secure HTTP
 $('search').addEventListener('input',e=>{if(pool)makeOptions(e.target.value)});
 $('chord').addEventListener('change',e=>{if(pool)chooseGroup(Number(e.target.value))});$('prev').addEventListener('click',()=>step(-1));$('next').addEventListener('click',()=>step(1));$('view').addEventListener('change',repaint);$('theme').addEventListener('change',e=>document.documentElement.dataset.theme=e.target.value);
 $('close').addEventListener('click',()=>$('inspector').close());$('inspector').addEventListener('click',e=>{if(e.target===$('inspector'))$('inspector').close()});
+// Long-press on a FretCard is an app gesture, not a browser text/context-menu
+// action. This catches the catalogue card and every dynamic progression card.
+document.addEventListener('contextmenu',event=>{
+  if(event.target instanceof Element && event.target.closest('.fret-tap, #inspector-board'))
+    event.preventDefault();
+});
 const touch=$('touch');const cancel=()=>{if(pendingTimer!==null){clearTimeout(pendingTimer);pendingTimer=null;}if(peeking){peeking=false;$('board').replaceChildren(primary)}pointer=null;};
 touch.addEventListener('pointerdown',e=>{if(!e.isPrimary||e.button!==0||pointer||!group)return;swallow=false;pointer={id:e.pointerId,x:e.clientX,y:e.clientY,moved:false};try{touch.setPointerCapture(e.pointerId)}catch{}pendingTimer=setTimeout(()=>{pendingTimer=null;if(pointer&&!pointer.moved){peeking=true;swallow=true;$('board').replaceChildren(alternate);}},100)});
 touch.addEventListener('pointermove',e=>{if(!pointer||e.pointerId!==pointer.id)return;if(Math.abs(e.clientX-pointer.x)>10||Math.abs(e.clientY-pointer.y)>10){pointer.moved=true;if(pendingTimer!==null){clearTimeout(pendingTimer);pendingTimer=null;}if(peeking){peeking=false;$('board').replaceChildren(primary)}}});
