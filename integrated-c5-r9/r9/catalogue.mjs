@@ -4,6 +4,47 @@ import {poolFromQualifiedIndex} from './src/runtime-index.mjs';
 import {adaptPosition,absoluteFrets,positionId} from './src/adapter.mjs';
 import {renderFretSurface} from './r3/dom-render.mjs';
 const $=id=>document.getElementById(id);
+const inspectorDialog=$('inspector');
+let modalPageLock=null;
+function unlockModalPage(){
+  const prior=modalPageLock;
+  if(!prior)return;
+  modalPageLock=null;
+  const html=document.documentElement,body=document.body;
+  html.style.overflow=prior.htmlOverflow;
+  body.style.position=prior.position;
+  body.style.top=prior.top;
+  body.style.left=prior.left;
+  body.style.width=prior.width;
+  body.style.overflow=prior.bodyOverflow;
+  window.scrollTo(prior.x,prior.y);
+}
+function openModalWithoutPageScroll(){
+  if(inspectorDialog.open)return;
+  const html=document.documentElement,body=document.body;
+  // Fixed-body locking prevents background drag/overscroll on mobile WebKit
+  // and Chromium. Capture inline styles and the exact scroll position first.
+  const prior={
+    x:window.scrollX,y:window.scrollY,
+    htmlOverflow:html.style.overflow,
+    position:body.style.position,
+    top:body.style.top,
+    left:body.style.left,
+    width:body.style.width,
+    bodyOverflow:body.style.overflow
+  };
+  modalPageLock=prior;
+  html.style.overflow='hidden';
+  body.style.position='fixed';
+  body.style.top=-prior.y+'px';
+  body.style.left=-prior.x+'px';
+  body.style.width='100%';
+  body.style.overflow='hidden';
+  try{inspectorDialog.showModal();}
+  catch(error){unlockModalPage();throw error;}
+}
+inspectorDialog.addEventListener('close',unlockModalPage);
+
 const BINARY_SHA='ed8a3c3fb34b431a276e5b7341066723427279dc4d3397a9c222dfd478abfed7';
 const ROOTS=Object.freeze({Csharp:'C#',Fsharp:'F#'});
 const PC=Object.freeze({C:0,'C#':1,Db:1,D:2,'D#':3,Eb:3,E:4,F:5,'F#':6,Gb:6,G:7,'G#':8,Ab:8,A:9,'A#':10,Bb:10,B:11});
@@ -42,7 +83,7 @@ function chooseGroup(gi){const found=pool.groups.find(g=>g.groupIndex===gi);if(!
 function step(delta){if(!group||group.positionIndices.length<2)return;position=(position+delta+group.positionIndices.length)%group.positionIndices.length;saved[String(group.groupIndex)]=group.positionIndices[position];repaint();persist();}
 function openInspector(){if(!group)return;const {gi,pi,p}=current();$('inspector-title').textContent=label(group)+' · position '+(position+1);$('source-id').textContent=positionId(gi,pi)+' · source base fret '+p.baseFret+' · R9 digital-only';const svg=rendering(gi,pi,$('view').value);const marks=svg.querySelectorAll('.vg-mark-wrap');const frets=absoluteFrets(p);
  for(let i=0;i<marks.length;i++){if(frets[i]===null)continue;const mark=marks[i];mark.setAttribute('pointer-events','auto');mark.style.cursor='pointer';mark.addEventListener('click',()=>{$('note-detail').textContent=`String ${6-i}, fret ${frets[i]}, MIDI ${[40,45,50,55,59,64][i]+frets[i]}`;});}
- $('inspector-board').replaceChildren(svg);$('note-detail').textContent='Tap a sounding mark to inspect its source position.';$('inspector').showModal();}
+ $('inspector-board').replaceChildren(svg);$('note-detail').textContent='Tap a sounding mark to inspect its source position.';openModalWithoutPageScroll();}
 function makeOptions(search){const q=search.trim().toLowerCase();const matches=pool.groups.filter(g=>label(g).toLowerCase().includes(q)||g.suffix.toLowerCase().includes(q));const select=$('chord'),previous=group?.groupIndex;select.replaceChildren();for(const g of matches){const o=document.createElement('option');o.value=String(g.groupIndex);o.textContent=labelGroup(g);select.append(o);}if(!matches.length){$('status').textContent='No structurally qualified chord groups match your search.';return;}const first=matches.some(g=>g.groupIndex===previous)?previous:matches[0].groupIndex;select.value=String(first);chooseGroup(first);$('counts').textContent=matches.length+' groups found';$('status').textContent='Verified R9 compressed chord catalogue ready.';}
 async function init(){try{if(!globalThis.crypto?.subtle)throw Error('secure HTTPS/localhost origin required');const [binary,indexResponse]=await Promise.all([fetch('./assets/chords.vgc',{cache:'no-store'}),fetch('./eligible-index.json',{cache:'no-store'})]);if(!binary.ok||!indexResponse.ok||binary.redirected||indexResponse.redirected)throw Error('asset fetch or redirect');const bytes=await binary.arrayBuffer();if(await hash(bytes)!==BINARY_SHA)throw Error('compressed binary checksum mismatch');pack=decodeVGC9(new Uint8Array(bytes));pool=poolFromQualifiedIndex(pack,await indexResponse.json());if(pool.eligibleGroups!==645||pool.eligiblePositions!==1229)throw Error('eligibility drift');readSaved();makeOptions('');r9Boot();$('status').textContent='Verified R9 compressed ChordDB ready: 645 groups, 1,229 renderable positions. Deferred source positions are not guessed.';}catch(e){$('status').textContent='R9 integration unavailable: '+(e?.message||String(e));$('status').dataset.error='true';}}
 $('search').addEventListener('input',e=>{if(pool)makeOptions(e.target.value)});
@@ -137,7 +178,7 @@ function r9OpenPosition(gi,pi){
   }
   $('inspector-board').replaceChildren(svg);
   $('note-detail').textContent='Tap a sounding note to inspect string, fret and MIDI.';
-  $('inspector').showModal();
+  openModalWithoutPageScroll();
 }
 function r9Card(entry,index){
   const g=r9Lookup.byIndex.get(entry.groupIndex),p=g.positionIndices.indexOf(entry.positionIndex);
