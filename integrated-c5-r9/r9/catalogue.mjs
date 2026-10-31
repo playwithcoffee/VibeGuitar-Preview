@@ -63,13 +63,15 @@ document.addEventListener('selectstart',event=>{
 document.addEventListener('dragstart',event=>{
   if(!uiEditable(event.target) && event.cancelable) event.preventDefault();
 },true);
-// Some Android SVG selection paths bypass selectstart. Clear only DOM ranges
-// outside editing surfaces; never touch the browser's internal input selection.
-document.addEventListener('selectionchange',()=>{
-  const selection=document.getSelection();
-  if(selection?.rangeCount && !uiEditable(selection.anchorNode) && !uiEditable(selection.focusNode))
-    selection.removeAllRanges();
-});
+// The SVG glyphs are presentation only; a transparent HTML hit surface
+// receives touches instead. Cancel touch pointer defaults BEFORE native
+// selection can begin. The fret zone retains touch-action: pan-y, so vertical
+// scrolling remains controlled by the browser.
+document.addEventListener('pointerdown',event=>{
+  if(event.pointerType!=='touch' || !event.cancelable) return;
+  const element=event.target instanceof Element ? event.target : event.target?.parentElement;
+  if(element?.closest('.fret-tap')) event.preventDefault();
+},true);
 document.addEventListener('contextmenu',event=>{
   const element=event.target instanceof Element ? event.target : event.target?.parentElement;
   if(element?.closest('.fret-tap, #inspector-board, .r9-chord-card') && !uiEditable(element))
@@ -78,7 +80,7 @@ document.addEventListener('contextmenu',event=>{
 const touch=$('touch');const cancel=()=>{if(pendingTimer!==null){clearTimeout(pendingTimer);pendingTimer=null;}if(peeking){peeking=false;$('board').replaceChildren(primary)}pointer=null;};
 touch.addEventListener('pointerdown',e=>{if(!e.isPrimary||e.button!==0||pointer||!group)return;swallow=false;pointer={id:e.pointerId,x:e.clientX,y:e.clientY,moved:false};try{touch.setPointerCapture(e.pointerId)}catch{}pendingTimer=setTimeout(()=>{pendingTimer=null;if(pointer&&!pointer.moved){peeking=true;swallow=true;$('board').replaceChildren(alternate);}},100)});
 touch.addEventListener('pointermove',e=>{if(!pointer||e.pointerId!==pointer.id)return;if(Math.abs(e.clientX-pointer.x)>10||Math.abs(e.clientY-pointer.y)>10){pointer.moved=true;if(pendingTimer!==null){clearTimeout(pendingTimer);pendingTimer=null;}if(peeking){peeking=false;$('board').replaceChildren(primary)}}});
-touch.addEventListener('pointerup',e=>{if(!pointer||e.pointerId!==pointer.id)return;const dx=e.clientX-pointer.x,dy=e.clientY-pointer.y,held=peeking;cancel();if(Math.abs(dx)>38&&Math.abs(dx)>Math.abs(dy)*1.25){swallow=true;step(dx<0?1:-1);}else if(held)swallow=true;});
+touch.addEventListener('pointerup',e=>{if(!pointer||e.pointerId!==pointer.id)return;const dx=e.clientX-pointer.x,dy=e.clientY-pointer.y,held=peeking;cancel();if(Math.abs(dx)>38&&Math.abs(dx)>Math.abs(dy)*1.25){swallow=true;step(dx<0?1:-1);}else if(held)swallow=true;else if(e.pointerType==='touch'){swallow=true;openInspector();}});
 touch.addEventListener('pointercancel',()=>{cancel();swallow=true});touch.addEventListener('lostpointercapture',cancel);touch.addEventListener('click',e=>{if(swallow){swallow=false;e.preventDefault();return;}openInspector()});touch.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();openInspector()}});document.addEventListener('visibilitychange',()=>{if(document.hidden)cancel()});window.addEventListener('blur',cancel);
 // Expanded R9 progression workspace. Research-preview storage is intentionally
 // independent of the legacy C5 production session V2 journal and shape IDs.
@@ -167,6 +169,7 @@ function r9Card(entry,index){
     gesture=null;restore();
     if(Math.abs(dx)>38&&Math.abs(dx)>1.25*Math.abs(dy)){suppress=true;r9StepOccurrence(entry.id,dx<0?1:-1);}
     else if(held)suppress=true;
+    else if(event.pointerType==='touch'){suppress=true;r9OpenPosition(entry.groupIndex,entry.positionIndex);}
   });
   board.addEventListener('pointercancel',()=>{gesture=null;restore();suppress=true;});
   board.addEventListener('lostpointercapture',()=>{gesture=null;restore();});
