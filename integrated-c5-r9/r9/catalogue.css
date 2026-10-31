@@ -11,3 +11,22 @@
 .r9-help,#progression-status{font-size:13px;color:var(--vg-muted);margin:12px 0}
 .r9-back{color:var(--vg-accent);font-size:13px;white-space:nowrap}
 @media(max-width:370px){.r9-chord-card{padding:8px}}
+
+/* C5 R9 mobile gesture policy: selection belongs in editing surfaces, never
+ * in cards, labels, buttons or other presentation UI. Keep native form
+ * controls, scrolling, focus rings and accessibility semantics unchanged. */
+html, body, body * {
+  -webkit-user-select: none;
+  user-select: none;
+}
+input, textarea,
+[contenteditable=""], [contenteditable="true"], [contenteditable="plaintext-only"],
+[contenteditable=""] *, [contenteditable="true"] *, [contenteditable="plaintext-only"] * {
+  -webkit-user-select: text;
+  user-select: text;
+}
+/* Prevent Safari/Android press-and-hold menus on the fretboard, not on
+ * editable text or ordinary links elsewhere in the page. */
+.fret-tap, .fret-tap *, #inspector-board, #inspector-board * {
+  -webkit-touch-callout: none;
+}
