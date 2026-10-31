@@ -48,3 +48,31 @@ input, textarea,
   user-select: text !important;
   -webkit-touch-callout: default;
 }
+
+/* C5 R9 touch-surface fix. Hit-test on a transparent HTML layer instead of
+ * SVG text: some mobile browsers can select SVG glyphs despite user-select.
+ * touch-action:pan-y preserves vertical scrolling and pointercancel behavior. */
+.fret-tap {
+  position:relative;
+  isolation:isolate;
+  touch-action:pan-y;
+  -webkit-user-select:none !important;
+  -moz-user-select:none !important;
+  user-select:none !important;
+  -webkit-tap-highlight-color:transparent;
+}
+.fret-tap::after {
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:2;
+  background:transparent;
+  pointer-events:auto;
+  touch-action:pan-y;
+}
+.fret-tap svg, .fret-tap svg * {
+  pointer-events:none !important;
+  -webkit-user-select:none !important;
+  -moz-user-select:none !important;
+  user-select:none !important;
+}
