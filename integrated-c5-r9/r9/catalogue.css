@@ -30,3 +30,21 @@ input, textarea,
 .fret-tap, .fret-tap *, #inspector-board, #inspector-board * {
   -webkit-touch-callout: none;
 }
+
+/* Android/Firefox SVG-specific fallback. Browser text selection may target
+ * an individual <text> glyph rather than its enclosing .fret-tap element. */
+.fret-tap, .fret-tap *, .fret-tap svg text,
+.r9-chord-card h3, .r9-chord-card .tiny,
+#inspector-board, #inspector-board * {
+  -webkit-user-select: none !important;
+  user-select: none !important;
+  -webkit-touch-callout: none !important;
+  -webkit-user-drag: none;
+}
+input, textarea,
+[contenteditable=""], [contenteditable="true"], [contenteditable="plaintext-only"],
+[contenteditable=""] *, [contenteditable="true"] *, [contenteditable="plaintext-only"] * {
+  -webkit-user-select: text !important;
+  user-select: text !important;
+  -webkit-touch-callout: default;
+}
